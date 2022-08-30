@@ -1,0 +1,16 @@
+PODS:
+  - YQRichText (0.1.0)
+
+DEPENDENCIES:
+  - YQRichText (from `../`)
+
+EXTERNAL SOURCES:
+  YQRichText:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  YQRichText: 9c05feec0b37096e4480600a71a7b91a495c62c2
+
+PODFILE CHECKSUM: 5357a5bc53831897cccc39e712a4c4b20fb95067
+
+COCOAPODS: 1.11.2

@@ -30,7 +30,7 @@
 /* Begin PBXFileReference section */
 		1B5F019DEEBB8E3F29CB573B /* Pods_YQRichText_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YQRichText_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C331D863AFBC9DC5F0DAF03 /* Pods-YQRichText_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YQRichText_Example.release.xcconfig"; path = "Target Support Files/Pods-YQRichText_Example/Pods-YQRichText_Example.release.xcconfig"; sourceTree = "<group>"; };
-		2DFB67069E2A4FCBE3CF88B1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		2DFB67069E2A4FCBE3CF88B1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* YQRichText_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YQRichText_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -42,8 +42,8 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		6FA2BAB98DAE5CD1A2E94E9B /* Pods_YQRichText_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YQRichText_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A6B8C9393C17B3D55EB2DE2E /* YQRichText.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = YQRichText.podspec; path = ../YQRichText.podspec; sourceTree = "<group>"; };
-		AF84153C73C293880A050DE3 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		A6B8C9393C17B3D55EB2DE2E /* YQRichText.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = YQRichText.podspec; path = ../YQRichText.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		AF84153C73C293880A050DE3 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		B6344700DA7BD8384D2190B8 /* Pods-YQRichText_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YQRichText_Tests.release.xcconfig"; path = "Target Support Files/Pods-YQRichText_Tests/Pods-YQRichText_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		EEBDB46822C32A31A802E40A /* Pods-YQRichText_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YQRichText_Example.debug.xcconfig"; path = "Target Support Files/Pods-YQRichText_Example/Pods-YQRichText_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		F6B58A85956B2568D55A4870 /* Pods-YQRichText_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YQRichText_Tests.debug.xcconfig"; path = "Target Support Files/Pods-YQRichText_Tests/Pods-YQRichText_Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -156,7 +156,6 @@
 				F6B58A85956B2568D55A4870 /* Pods-YQRichText_Tests.debug.xcconfig */,
 				B6344700DA7BD8384D2190B8 /* Pods-YQRichText_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -227,6 +226,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);

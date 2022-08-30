@@ -1,0 +1,22 @@
+{
+  "name": "YQRichText",
+  "version": "0.1.0",
+  "summary": "A short description of YQRichText.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/YQChan/YQRichText",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "YQChan": "994899594@qq.com"
+  },
+  "source": {
+    "git": "https://github.com/YQChan/YQRichText.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source_files": "YQRichText/Classes/**/*"
+}
