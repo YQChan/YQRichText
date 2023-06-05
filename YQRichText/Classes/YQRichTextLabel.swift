@@ -7,78 +7,51 @@
 
 import UIKit
 
-private let maxContentSize = CGSize(width: 0x100000, height: 0x100000)
-
-open class YQRichTextLabel: UIView {
+public class YQRichTextLabel: UILabel {
     
-    public var text: String? {
-        get {
-            return self.drawText?.string
-        }
-        set {
-            if let string = newValue, string.isEmpty == false {
-                var attributes: [NSAttributedString.Key : Any] = [
-                    .font : self.font,
-                    .foregroundColor : self.textColor
-                ]
-                if self.lineHeight.isZero == false {
-                    let style = NSMutableParagraphStyle()
-                    style.minimumLineHeight = self.lineHeight
-                    attributes[.paragraphStyle] = style
-                }
-                let _text = NSMutableAttributedString(
-                    string: string,
-                    attributes: attributes
-                )
-                self.textParser?.parse(text: _text)
-                self.drawText = _text
-            } else {
-                self.drawText = nil
-            }
+    public override var text: String? {
+        didSet {
+            self.updateTextParser()
         }
     }
     
-    public var attributedText: NSAttributedString? {
-        get {
-            return self.drawText
-        }
-        set {
-            if let string = newValue, string.string.isEmpty == false {
-                let _text = NSMutableAttributedString(attributedString: string)
-                self.textParser?.parse(text: _text)
-                self.drawText = _text
-            } else {
-                self.drawText = nil
-            }
+    public override var attributedText: NSAttributedString? {
+        didSet {
+            self.updateTextParser()
         }
     }
     
-    public var numberOfLines = 1 {
+    public override var numberOfLines: Int {
         didSet {
             self.textLayout.numberOfLines = numberOfLines
-            self.reload()
-            self.invalidateIntrinsicContentSize()
         }
     }
     
-    public var font = UIFont.systemFont(ofSize: 17) {
-        didSet {
-            self.drawText?.yq.font = font
-            self.reload()
-            self.invalidateIntrinsicContentSize()
+    public override var lineBreakMode: NSLineBreakMode {
+        get {
+            return _lineBreakMode
+        }
+        set {
+            _lineBreakMode = newValue
         }
     }
     
-    public var textColor = UIColor.black {
+    private var _lineBreakMode: NSLineBreakMode = .byWordWrapping {
         didSet {
-            self.drawText?.yq.textColor = textColor
-            self.reload()
+            switch _lineBreakMode {
+            case .byWordWrapping, .byCharWrapping, .byClipping:
+                super.lineBreakMode = _lineBreakMode
+            case .byTruncatingHead, .byTruncatingMiddle, .byTruncatingTail:
+                super.lineBreakMode = .byWordWrapping
+            @unknown default:
+                super.lineBreakMode = .byWordWrapping
+            }
         }
     }
     
     public var truncationToken: NSAttributedString? {
         didSet {
-            self.reload()
+            self.setNeedsDisplay()
             self.invalidateIntrinsicContentSize()
             self.textLayout.truncationToken = truncationToken
         }
@@ -86,42 +59,7 @@ open class YQRichTextLabel: UIView {
     
     public var textParser: YQRichTextParser? {
         didSet {
-            if let text = self.drawText {
-                textParser?.parse(text: text)
-            }
-            self.reload()
-            self.invalidateIntrinsicContentSize()
-        }
-    }
-    
-    public var preferredMaxLayoutWidth: CGFloat = .zero {
-        didSet {
-            if oldValue != preferredMaxLayoutWidth {
-                self.invalidateIntrinsicContentSize()
-            }
-        }
-    }
-    
-    public var lineHeight: CGFloat = .zero {
-        didSet {
-            if oldValue != lineHeight {
-                let style = NSMutableParagraphStyle()
-                style.minimumLineHeight = lineHeight
-                self.drawText?.yq.addAttribute(.paragraphStyle, value: style)
-                self.reload()
-                self.invalidateIntrinsicContentSize()
-            }
-        }
-    }
-    
-    func append(_ string: NSAttributedString) {
-        self.drawText?.append(string)
-    }
-    
-    private var drawText: NSMutableAttributedString? {
-        didSet {
-            self.reload()
-            self.invalidateIntrinsicContentSize()
+            self.updateTextParser()
         }
     }
     
@@ -131,29 +69,34 @@ open class YQRichTextLabel: UIView {
     
     private var textLinkRange = NSRange()
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
-        self.commonInit()
+        self.setup()
     }
     
-    required public init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.commonInit()
+        self.setup()
     }
     
-    private func commonInit() {
+    private func setup() {
         self.isUserInteractionEnabled = true
-        self.backgroundColor = .clear
+        super.lineBreakMode = .byWordWrapping
     }
     
-    private func reload() {
-        self.setNeedsDisplay()
+    private func updateTextParser() {
+        guard let _text = self.attributedText, _text.string.isEmpty == false, let parser = self.textParser else {
+            return
+        }
+        let newText = NSMutableAttributedString(attributedString: _text)
+        parser.parse(text: newText)
+        super.attributedText = newText
     }
     
-    open override func draw(_ rect: CGRect) {
+    public override func draw(_ rect: CGRect) {
         textLayout.removeAttachments()
         
-        guard let _text = self.drawText else {
+        guard let _text = self.attributedText else {
             return
         }
         
@@ -166,49 +109,29 @@ open class YQRichTextLabel: UIView {
         textLayout.drawAttachment(in: context, view: self)
     }
     
-    open override var intrinsicContentSize: CGSize {
-        return sizeThatFits(bounds.size)
-    }
-    
-    open override var frame: CGRect {
-        didSet {
-            if oldValue.size != frame.size {
-                self.reload()
-            }
+    public override func textRect(forBounds bounds: CGRect, limitedToNumberOfLines numberOfLines: Int) -> CGRect {
+        guard let _text = self.attributedText, _text.string.isEmpty == false else {
+            return super.textRect(forBounds: bounds, limitedToNumberOfLines: numberOfLines)
         }
-    }
-    
-    open override var bounds: CGRect {
-        didSet {
-            if oldValue.size != bounds.size {
-                self.reload()
-                self.invalidateIntrinsicContentSize()
-            }
-        }
-    }
-    
-    open override func sizeToFit() {
-        self.frame.size = intrinsicContentSize
-    }
-    
-    open override func sizeThatFits(_ size: CGSize) -> CGSize {
-        guard let _text = self.drawText, _text.string.isEmpty == false else { return .zero }
-        var rect = CGRect(x: 0, y: 0, width: size.width, height: maxContentSize.height)
-        if rect.width.isZero {
-            rect.size.width = self.preferredMaxLayoutWidth.isZero ? maxContentSize.width : self.preferredMaxLayoutWidth
-        }
+        var rect = bounds
+        let maxContentSize = UIView.layoutFittingExpandedSize
+        rect.size.width = min(maxContentSize.width, rect.width)
+        rect.size.height = min(maxContentSize.height, rect.height)
         textLayout.layout(text: _text, in: rect)
-        return textLayout.textBoundingSize
+        var textRect = CGRect.zero
+        textRect.size = textLayout.textBoundingSize
+        return textRect
     }
     
     // MARK: - 点击手势处理
-    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         defer {
             if self.textLink == nil {
                 super.touchesBegan(touches, with: event)
             }
         }
-        guard let _text = self.drawText, _text.string.isEmpty == false else {
+        guard let _text = self.attributedText, _text.string.isEmpty == false else {
             return
         }
         guard let touch = touches.first else { return }
@@ -226,13 +149,13 @@ open class YQRichTextLabel: UIView {
         }
     }
     
-    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if self.textLink == nil {
             super.touchesEnded(touches, with: event)
             return
         }
         var string = ""
-        if let _text = self.drawText {
+        if let _text = self.attributedText {
             if self.textLinkRange.length > 0 && self.textLinkRange.location + self.textLinkRange.length <= _text.length {
                 string = (_text.string as NSString).substring(with: self.textLinkRange)
             }
@@ -242,7 +165,7 @@ open class YQRichTextLabel: UIView {
         self.textLinkRange = NSRange()
     }
     
-    open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+    public override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         if self.textLink == nil {
             super.touchesCancelled(touches, with: event)
             return

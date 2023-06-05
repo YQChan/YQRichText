@@ -87,7 +87,7 @@ class YQRichTextLayout {
         self.lines = _lines
         self.textBoundingRect = _textBoundingRect
         self.textBoundingSize = CGSize(
-            width: _textBoundingRect.width,
+            width: ceil(_textBoundingRect.width + _textBoundingRect.origin.x),
             height: ceil(_textBoundingRect.height + _textBoundingRect.origin.y)
         )
         let ctRange = CTFrameGetVisibleStringRange(ctFrame)
